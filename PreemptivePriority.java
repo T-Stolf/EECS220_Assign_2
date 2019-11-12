@@ -1,9 +1,10 @@
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RoundRobin extends CPUScheduler
+public class PreemptivePriority extends CPUScheduler
 {
     @Override
     public void process()
@@ -25,39 +26,65 @@ public class RoundRobin extends CPUScheduler
         
         List<P> processes = Utility.deepCopy(this.getProcesses());
         int time = processes.get(0).getAT();
-        int tq = this.getTQ();
         
         while (!processes.isEmpty())
         {
-            P p = processes.get(0);
-            int bt = (p.getBT() < tq ? p.getBT() : tq);
-            this.getLog().add(new Event(p.getName(), time, time + bt));
-            time += bt;
-            processes.remove(0);
+            List<P> availableProcesses = new ArrayList();
             
-            if (p.getBT() > tq)
+            for (P p : processes)
             {
-                p.setBT(p.getBT() - tq);
-                
+                if (p.getAT() <= time)
+                {
+                	availableProcesses.add(p);
+                }
+            }
+            
+            Collections.sort(availableProcesses, (Object o1, Object o2) -> {
+                if (((P) o1).getPriority()== ((P) o2).getPriority())
+                {
+                    return 0;
+                }
+                else if (((P) o1).getPriority() < ((P) o2).getPriority())
+                {
+                    return -1;
+                }
+                else
+                {
+                    return 1;
+                }
+            });
+
+            P p = availableProcesses.get(0);
+            this.getLog().add(new Event(p.getName(), time, ++time));
+            p.setBT(p.getBT() - 1);
+            
+            if (p.getBT() == 0)
+            {
                 for (int i = 0; i < processes.size(); i++)
                 {
-                    if (processes.get(i).getAT() > time)
+                    if (processes.get(i).getName().equals(p.getName()))
                     {
-                    		processes.add(i, p);
-                        break;
-                    }
-                    else if (i == processes.size() - 1)
-                    {
-                    	processes.add(p);
+                        processes.remove(i);
                         break;
                     }
                 }
             }
         }
         
+        for (int i = this.getLog().size() - 1; i > 0; i--)
+        {
+            List<Event> timeline = this.getLog();
+            
+            if (timeline.get(i - 1).getName().equals(timeline.get(i).getName()))
+            {
+                timeline.get(i - 1).setFT(timeline.get(i).getFT());
+                timeline.remove(i);
+            }
+        }
+        
         Map map = new HashMap();
         
-        for (P p : this.processes)
+        for (P p : this.getProcesses())
         {
             map.clear();
             

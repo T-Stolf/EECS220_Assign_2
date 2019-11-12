@@ -1,20 +1,19 @@
 import java.util.Collections;
 import java.util.List;
 
-public class FirstComeFirstServe  extends CPUScheduler{
 
-	        
-	      
-	        
-	   	 @Override
-		    public void process()
-		    {        
-		        Collections.sort(this.getProcesses(), (Object o1, Object o2) -> {
-		            if (((P) o1).getArrivalTime() == ((P) o2).getArrivalTime())
-		            {
-		                return 0;
-		            }
-		            else if (((P) o1).getArrivalTime() < ((P) o2).getArrivalTime())
+public class FirstComeFirstServe extends CPUScheduler
+{
+	@Override
+	public void process() 
+	{
+	
+		Collections.sort(this.getProcesses(), (Object o1, Object o2) -> {
+			if (((P) o1).getAT() == ((P) o2).getAT())
+            {
+                return 0;
+            }
+            else if (((P) o1).getAT() < ((P) o2).getAT())
 		            {
 		                return -1;
 		            }
@@ -24,25 +23,25 @@ public class FirstComeFirstServe  extends CPUScheduler{
 		            }
 		        });
 		        
-		        List<Event> timeline = this.getTimeline();
+		        List<Event> log = this.getLog();
 	        
 	        for (P p : this.getProcesses())
 	        {
-	            if (timeline.isEmpty())
+	            if (log.isEmpty())
 	            {
-	                timeline.add(new Event(p.getName(), p.getArrivalTime(), p.getArrivalTime() + p.getCPUTime()));
+	                log.add(new Event(p.getName(), p.getAT(), p.getAT() + p.getBT()));
 	            }
 	            else
 	            {
-	                Event event = timeline.get(timeline.size() - 1);
-	                timeline.add(new Event(p.getName(), event.getFinishTime(), event.getFinishTime() + p.getCPUTime()));
+	                Event e = log.get(log.size() - 1);
+	                log.add(new Event(p.getName(), e.getFT(), e.getFT() + p.getBT()));
 	            }
 	        }
-	        
+
 	        for (P p : this.getProcesses())
 	        {
-	            p.setWaitingTime(this.getEvent(p).getStartTime() - p.getArrivalTime());
-	            p.setTurnaroundTime(p.getWaitingTime() + p.getCPUTime());
+	            p.setWT(this.getEvent(p).getST() - p.getAT());
+	            p.setTT(p.getWT() + p.getBT());
 	        }
 	    }
 	}

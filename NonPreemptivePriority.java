@@ -1,8 +1,9 @@
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ShortestJobFirst extends CPUScheduler
+public class NonPreemptivePriority extends CPUScheduler
 {
     @Override
     public void process()
@@ -22,11 +23,8 @@ public class ShortestJobFirst extends CPUScheduler
             }
         });
         
-        
         List<P> processes = Utility.deepCopy(this.getProcesses());
         int time = processes.get(0).getAT();
-        
-        
         
         while (!processes.isEmpty())
         {
@@ -41,11 +39,11 @@ public class ShortestJobFirst extends CPUScheduler
             }
             
             Collections.sort(availableProcesses, (Object o1, Object o2) -> {
-                if (((P) o1).getBT() == ((P) o2).getBT())
+                if (((P) o1).getPriority()== ((P) o2).getPriority())
                 {
                     return 0;
                 }
-                else if (((P) o1).getBT() < ((P) o2).getBT())
+                else if (((P) o1).getPriority() < ((P) o2).getPriority())
                 {
                     return -1;
                 }
@@ -61,32 +59,16 @@ public class ShortestJobFirst extends CPUScheduler
             
             for (int i = 0; i < processes.size(); i++)
             {
-            	
                 if (processes.get(i).getName().equals(p.getName()))
                 {
-                	processes.remove(i);
+                    processes.remove(i);
                     break;
                 }
-            }
-            
-        }
-        List<Event> log = this.getLog();
-        for (P p : this.getProcesses())
-        {
-            if (log.isEmpty())
-            {
-                log.add(new Event(p.getName(), p.getAT(), p.getAT() + p.getBT()));
-            }
-            else
-            {
-                Event event = log.get(log.size() - 1);
-                log.add(new Event(p.getName(), event.getFT(), event.getFT() + p.getBT()));
             }
         }
         
         for (P p : this.getProcesses())
         {
-       
             p.setWT(this.getEvent(p).getST() - p.getAT());
             p.setTT(p.getWT() + p.getBT());
         }

@@ -1,92 +1,108 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CPUScheduler
-{
-    protected final List<P> processes;
-    private final List<Event> timeline;
-    private int timeQuantum;
+/**
+ * This abstract class CPUScheduler holds a list of the processes 
+ * and a list of events.
+ */
+
+public abstract class CPUScheduler{
+    public List<P> processes;   //list of processes see P class
+    public List<Event> log;	   //see Event class
+    public int tq;              //time quantum
     
-    
-    
-    public CPUScheduler()
-    {
+    /**
+     * Initializes two empty ArrayLists and sets the timeQuantum to 1
+     */
+    public CPUScheduler(){
     		processes = new ArrayList();
-        timeline = new ArrayList();
-        timeQuantum = 1;
+        log = new ArrayList();
+        tq = 2;
     }
     
-    public boolean add(P p)
-    {
+    /**
+	 * Adds a process to processes
+	 * @param p a process to add
+	 */
+    public boolean add(P p){
         return processes.add(p);
     }
 
-    public List<P> getProcesses()
-    {
+    /**
+   	 * Returns a List of the processes
+   	 */
+    public List<P> getProcesses(){
         return processes;
     }
-    public void setTimeQuantum(int timeQuantum)
-    {
-        this.timeQuantum = timeQuantum;
+    
+    /**
+  	 * Adds a process to processes
+  	 * @param tq the new time quantum
+  	 */
+    public void setTQ(int tq){
+        this.tq = tq;
     }
     
-    public int getTimeQuantum()
-    {
-        return timeQuantum;
+    /**
+  	 * Returns the time quantum
+  	 */
+    public int getTQ(){
+        return tq;
     }
 
-    
-    public Event getEvent(P p)
-    {
-        for (Event event : timeline)
-        {
-            if (p.getName().equals(event.getProcessName()))
-            {
-                return event;
+    /**
+  	 * Returns the Event
+  	 * @param p a process
+  	 */
+    public Event getEvent(P p){
+        for (Event e : log) {
+            if (p.getName().equals(e.getName())) {
+                return e;
             }
         }
 		return null;
     }
-    public P getProcess(String process)
-    {
-        for (P p : processes)
-        {
-            if (p.getName().equals(process))
-            {
+    
+    /**
+  	 * Returns the process P
+  	 * @param p a process name
+  	 */
+    public P getProcess(String process) {
+        for (P p : processes)  {
+            if (p.getName().equals(process))  {
                 return p;
             }
         }
-        
         return null;
-}
+    }
 
-    
-    public List<Event> getTimeline()
-    {
-        return timeline;
-    }
-    public double getAverageWaitingTime()
-    {
-        double avg = 0.0;
-        
-        for (P p : processes)
-        {
-            avg += p.getWaitingTime();
-        }
-        
-        return avg / processes.size();
+    /**
+  	 * Returns the log of Events
+  	 */
+    public List<Event> getLog(){
+        return log;
     }
     
-    public double getAverageTurnAroundTime()
-    {
-        double avg = 0.0;
-        
-        for (P p : processes)
-        {
-            avg += p.getTurnaroundTime();
+    /**
+  	 * Returns the average wait time
+  	 */
+    public double gawt(){
+        double a = 0;
+        for (P p : processes){
+            a += p.getWT();
         }
-        
-        return avg / processes.size();
+        return a / processes.size();
+    }
+    
+    /**
+  	 * Returns the average turn around time
+  	 */
+    public double gatt(){
+        double a = 0;
+        for (P p : processes){
+            a += p.getTT();
+        }
+        return a / processes.size();
     }
     
     public abstract void process();

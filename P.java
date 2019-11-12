@@ -1,73 +1,65 @@
+/**
+ * This class is used to represent each process
+
+ */
 
 public class P
 {
-	private String name;
-    private int arrivalTime;
-    private int CPUTime;
-    private int IOTime;
-    private int priority;
-    private int turnaroundTime;
-    private int waitingTime;
+	public String name;
+	public int AT;
+	public int BT;
+	public int priority;
+	public int TT;
+	public int WT;
     
-    public P(String name, int arrivalTime, int CPUTime, int priority)
-    {
-    	this.name = name;
-        this.arrivalTime = arrivalTime;
-        this.CPUTime = CPUTime;
-        this.priority = priority;
+	/**
+     * Initializes a new process P 
+     * @param n name, at arrival time, CPUTime CPU Time, p priority
+     */
+    public P(String n, int at, int bt, int p){
+    		this.name = n;
+        this.AT = at;
+        this.BT = bt;
+        this.priority = p;
     }
-    public void setCPUTime(int CPUTime)
-    {
-        this.CPUTime = CPUTime;
+    
+    public void setBT(int bt){
+        this.BT = bt;
     }
   
-    
-    public void setIOTime(int IOTime)
-    {
-        this.IOTime = IOTime;
-    }
   
-    public void setWaitingTime(int waitingTime)
-    {
-        this.waitingTime = waitingTime;
+    public void setWT(int WT) {
+        this.WT = WT;
     }
     
-    public void setTurnaroundTime(int turnaroundTime)
-    {
-        this.turnaroundTime = turnaroundTime;
+    public void setTT(int TT){
+        this.TT = TT;
     }
     
-    public int getArrivalTime()
-    {
-    	return this.arrivalTime;
+    /**
+  	 * Returns the arrival time of the process 
+  	 */
+    public int getAT(){
+    	return this.AT;
     }
-    public String getName()
-    {
+    
+    public String getName(){
     	return this.name;
     }
     
-    public int getCPUTime()
-    {
-    	return this.CPUTime;
+    public int getBT(){
+    	return this.BT;
     }
-    
-    public int getIOTime()
-    {
-    	return this.IOTime;
-    }
-    
-    public int getPriority()
-    {
+  
+    public int getPriority() {
         return this.priority;
     }
     
-    public int getWaitingTime()
-    {
-        return this.waitingTime;
+    public int getWT(){
+        return this.WT;
     }
     
-    public int getTurnaroundTime()
-    {
-        return this.turnaroundTime;
+    public int getTT() {
+        return this.TT;
     }
 }
